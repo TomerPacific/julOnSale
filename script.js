@@ -4,7 +4,7 @@ let dateHeader = document.getElementById('date');
 
 const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-const url = "https://ironsrc.jul.co.il/";
+const url = "https://jul-on-sale.herokuapp.com/jul";
 
 var xmlHttp = new XMLHttpRequest();
 xmlHttp.open("GET", url, true);
