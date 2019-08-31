@@ -43,9 +43,14 @@ function loadData(categories) {
 		let category = categories[index];
 		let div = document.createElement('div');
 		let anchor = document.createElement('a');
+		let image = document.createElement('img');
+
 		anchor.href = category.link;
 		anchor.innerHTML = category.name;
+		image.src = '/assets/' + category.image + '.png';
+		image.setAttribute('class', 'category');
 		div.appendChild(anchor);
+		div.appendChild(image);
 		mainDiv.appendChild(div);
 	}
 
