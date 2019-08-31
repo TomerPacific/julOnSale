@@ -23,17 +23,7 @@ xmlHttp.onload = function() {
 		return;
 	}
 	
-	let categories = data.message;
-
-	for (let index = 0; index < categories.length; index++) {
-		let category = categories[index];
-		let div = document.createElement('div');
-		let anchor = document.createElement('a');
-		anchor.href = category.link;
-		anchor.innerHTML = category.name;
-		div.appendChild(anchor);
-		mainDiv.appendChild(div);
-	}
+	loadData(data.message);
 
 	loader[0].style.display = "none";
 };
@@ -43,6 +33,21 @@ xmlHttp.onerror = function() {
 };
 
 xmlHttp.send();
+
+function loadData(categories) {
+
+	for (let index = 0; index < categories.length; index++)
+	 {
+		let category = categories[index];
+		let div = document.createElement('div');
+		let anchor = document.createElement('a');
+		anchor.href = category.link;
+		anchor.innerHTML = category.name;
+		div.appendChild(anchor);
+		mainDiv.appendChild(div);
+	}
+
+}
 
 function parseJson(json) {
 	let data = null;
