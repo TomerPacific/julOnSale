@@ -3,6 +3,7 @@ var bodyParser = require('body-parser');
 var cors = require('cors');
 const rp = require('request-promise');
 const cheerio = require('cheerio');
+const CATEGORY_WORD_LENGTH = 9;
 var port = process.env.PORT || 3000;
 var app = express();
 
@@ -59,11 +60,19 @@ function parseCategoriesFromHtml(html) {
                 let header = innerChildren[2];
                 let categoryName = header.children[0].data.trim();
                 category.name = categoryName;
-                categoriesArr.push(category);
+                category.image = assignCategoryImage(categoryName);
+                categoriesArr.push(category.link);
                 category = {};
               }
           
             }
       }
    return categories;
+}
+
+
+function assignCategoryImage(link) {
+  let catroryWordIndex = link.indexOf('category');
+  let categoryName = link.substring(catroryWordIndex + CATEGORY_WORD_LENGTH, link.length - 1);
+  return categoryName;
 }
