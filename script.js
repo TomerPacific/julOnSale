@@ -22,6 +22,8 @@ xmlHttp.onload = function() {
 	if (!data || !data.message) {
 		return;
 	}
+
+	mainDiv.innerHTML = '';
 	
 	loadData(data.message);
 
