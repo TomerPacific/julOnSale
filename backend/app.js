@@ -32,7 +32,7 @@ app.get('/jul', function (req, res) {
     rp(url)
     .then(function(html){
       cheerio('.service-status', html);
-
+      categoriesArr = [];
       let categories = parseCategoriesFromHtml(html);
 
       res.status(200).json({ message: categoriesArr});
