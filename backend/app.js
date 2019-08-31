@@ -60,8 +60,8 @@ function parseCategoriesFromHtml(html) {
                 let header = innerChildren[2];
                 let categoryName = header.children[0].data.trim();
                 category.name = categoryName;
-                category.image = assignCategoryImage(categoryName);
-                categoriesArr.push(category.link);
+                category.image = assignCategoryImage(category.link);
+                categoriesArr.push(category);
                 category = {};
               }
           
