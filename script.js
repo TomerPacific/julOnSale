@@ -16,15 +16,26 @@ xmlHttp.onload = function() {
 		return;
 	}
 
-	mainDiv.style.display = "block";
-
 	setCurrentDate();
 
 	let data = parseJson(responseText);
-	if (!data) {
+	if (!data || !data.message) {
 		return;
 	}
 	
+	let categories = data.message;
+
+	for (let index = 0; i < categories.length; i++) {
+		let category = categories[index];
+		let div = document.createElement('div');
+		let anchor = document.createElement('a');
+		a.href = category.link;
+		a.innerHTML = category.name;
+		div.appendChild(anchor);
+		mainDiv.appendChild(div);
+	}
+
+	loader[0].style.display = "none";
 };
 
 xmlHttp.onerror = function() {
