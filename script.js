@@ -25,7 +25,7 @@ xmlHttp.onload = function() {
 	
 	let categories = data.message;
 
-	for (let index = 0; i < categories.length; i++) {
+	for (let index = 0; index < categories.length; index++) {
 		let category = categories[index];
 		let div = document.createElement('div');
 		let anchor = document.createElement('a');
