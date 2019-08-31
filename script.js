@@ -45,12 +45,12 @@ function loadData(categories) {
 		let anchor = document.createElement('a');
 		let image = document.createElement('img');
 
-		anchor.href = category.link;
-		anchor.innerHTML = category.name;
 		image.src = 'https://github.com/TomerPacific/julOnSale/blob/master/assets/' + category.image + '.png?raw=true';
 		image.setAttribute('class', 'category');
+		anchor.href = category.link;
+		anchor.innerHTML = image;
+		
 		div.appendChild(anchor);
-		div.appendChild(image);
 		mainDiv.appendChild(div);
 	}
 
