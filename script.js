@@ -29,8 +29,8 @@ xmlHttp.onload = function() {
 		let category = categories[index];
 		let div = document.createElement('div');
 		let anchor = document.createElement('a');
-		a.href = category.link;
-		a.innerHTML = category.name;
+		anchor.href = category.link;
+		anchor.innerHTML = category.name;
 		div.appendChild(anchor);
 		mainDiv.appendChild(div);
 	}
