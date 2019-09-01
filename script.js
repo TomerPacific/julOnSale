@@ -48,7 +48,7 @@ function loadData(categories) {
 		image.src = 'https://github.com/TomerPacific/julOnSale/blob/master/assets/' + category.image + '.png?raw=true';
 		image.setAttribute('class', 'category');
 		anchor.href = category.link;
-		anchor.innerHTML = '<img src=' + image.src + ' class="category" alt=' + category.name + '>';
+		anchor.innerHTML = '<img src=' + image.src + ' class="category" alt=' + category.name + ' title=' + category.name + '>';
 
 		div.appendChild(header);
 		div.appendChild(anchor);
@@ -70,7 +70,7 @@ function parseJson(json) {
 
 function setCurrentDate() {
 	var currentDate = new Date();
-	dateHeader.innerHTML = "For the day of " + months[currentDate.getMonth()] + ' ' + currentDate.getDate() + ' ' + currentDate.getFullYear();
+	dateHeader.innerHTML = "For the day of " + months[currentDate.getMonth()] + ' ' + currentDate.getDate() + ', ' + currentDate.getFullYear();
 	dateHeader.style.display = "block";
 }
 
