@@ -47,7 +47,7 @@ function loadData(categories) {
 		header.innerHTML = category.name;
 		image.src = 'https://github.com/TomerPacific/julOnSale/blob/master/assets/' + category.image + '.png?raw=true';
 		image.setAttribute('class', 'category');
-		anchor.href = "https://tomerpacific.github.io/julOnSale/categories/baby/" + category.image + ".html";
+		anchor.href = "https://tomerpacific.github.io/julOnSale/categories/" + category.image + "/" + category.image + ".html";
 		anchor.innerHTML = '<img src=' + image.src + ' class="category" alt=' + category.name + ' title=' + category.name + '>';
 
 		div.appendChild(header);
