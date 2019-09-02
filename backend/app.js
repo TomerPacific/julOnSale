@@ -6,9 +6,7 @@ const cheerio = require('cheerio');
 const CATEGORY_WORD_LENGTH = 9;
 var port = process.env.PORT || 3000;
 var app = express();
-
 const MAIN_URL = "https://ironsrc.jul.co.il/";
-const onSaleClass = "onsale";
 const shoppingCategoriesClass = ".product-category.product";
 let categoriesArr = [];
 let category = {};
@@ -34,7 +32,6 @@ app.get('/jul', function (req, res) {
  
     rp(MAIN_URL)
     .then(function(html){
-      cheerio('.service-status', html);
       categoriesArr = [];
       let categories = parseCategoriesFromHtml(html);
 
@@ -47,13 +44,36 @@ app.get('/jul', function (req, res) {
 
 //Routes for categories
 app.get('/category/baby', function (req, res) {
-
+    rp(MAIN_URL + '/product-category/baby/')
+    .then(function(html){
+      let products = getProductsOnSale(html);
+      res.status(200).json({ message: products});
+    })
+    .catch(function(err){
+      console.log(err);
+    });
 });
 
 
 app.listen(port, function () {
  console.log('Jul app listening on port ' + port);
 });
+
+function getProductsOnSale(html) {
+  let products = cheerio('.product.type-product', html);
+  let productsOnSale = [];
+
+  for (let index = 0; index < products.length; index++) {
+    let product = products[index];
+    let productLink = product.children[1];
+    let onSaleSpan = productLink.children[8];
+    if (onSaleSpan && onSaleSpan.attribs.class === 'onsale') {
+      productsOnSale.push(product);
+    }
+  }
+
+  return productsOnSale;
+}
 
 
 function parseCategoriesFromHtml(html) {
