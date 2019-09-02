@@ -7,7 +7,7 @@ const CATEGORY_WORD_LENGTH = 9;
 var port = process.env.PORT || 3000;
 var app = express();
 
-const url = "https://ironsrc.jul.co.il/";
+const MAIN_URL = "https://ironsrc.jul.co.il/";
 const onSaleClass = "onsale";
 const shoppingCategoriesClass = ".product-category.product";
 let categoriesArr = [];
@@ -28,9 +28,11 @@ app.use(cors({
   origin: 'https://tomerpacific.github.io'
 }));
 
+
+//Main route for getting categories
 app.get('/jul', function (req, res) {
  
-    rp(url)
+    rp(MAIN_URL)
     .then(function(html){
       cheerio('.service-status', html);
       categoriesArr = [];
@@ -41,6 +43,11 @@ app.get('/jul', function (req, res) {
     .catch(function(err){
       console.log(err);
     });
+});
+
+//Routes for categories
+app.get('/category/baby', function (req, res) {
+
 });
 
 
