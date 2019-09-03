@@ -62,13 +62,26 @@ app.listen(port, function () {
 function getProductsOnSale(html) {
   let products = cheerio('.product.type-product', html);
   let productsOnSale = [];
+  let productOnSale = {};
 
   for (let index = 0; index < products.length; index++) {
     let product = products[index];
     let productLink = product.children[1];
     let onSaleSpan = productLink.children[8];
+
     if (onSaleSpan && onSaleSpan.attribs.class === 'onsale') {
-      productsOnSale.push(product);
+      productOnSale.link = productLink.attribs.href;
+      let children = productLink.children;
+      let image = children[0];
+      productOnSale.image = image.attribs.src;
+
+      let priceParent = children[2];
+      let salePrice = priceParent.children[2];
+      let innerChild = salePrice.children[0].children[1].data;
+      productOnSale.price = innerChild;
+    
+      productsOnSale.push(productOnSale);
+      productOnSale = {};
     }
   }
 
