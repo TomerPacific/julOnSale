@@ -3,6 +3,7 @@ var bodyParser = require('body-parser');
 var cors = require('cors');
 const rp = require('request-promise');
 const cheerio = require('cheerio');
+const puppeteer = require('puppeteer');
 const CATEGORY_WORD_LENGTH = 9;
 var port = process.env.PORT || 3000;
 var app = express();
