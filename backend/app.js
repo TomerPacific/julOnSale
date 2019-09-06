@@ -29,7 +29,12 @@ app.get('/jul', function (req, res) {
 
  (async () => {
     
-     const browser = await puppeteer.launch()
+     const browser = await puppeteer.launch({
+        'args' : [
+          '--no-sandbox',
+          '--disable-setuid-sandbox'
+        ]
+      })
      const page = await browser.newPage()
      await page.goto(MAIN_URL)
 
@@ -38,7 +43,7 @@ app.get('/jul', function (req, res) {
         let categoriesArr = [];
         let cat = {};
         for(let i = 0; i < cats.length; i++) {
-          let anchor = cats[i].children[0];
+            let anchor = cats[i].children[0];
             cat.link = anchor.attributes.href.textContent;
             
             cat.name = anchor.children[1].textContent.trim();
