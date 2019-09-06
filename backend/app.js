@@ -1,16 +1,12 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var cors = require('cors');
-const rp = require('request-promise');
-const cheerio = require('cheerio');
 const puppeteer = require('puppeteer');
 const CATEGORY_WORD_LENGTH = 9;
 var port = process.env.PORT || 3000;
 var app = express();
 const MAIN_URL = "https://ironsrc.jul.co.il/";
 const shoppingCategoriesClass = ".product-category.product";
-let categoriesArr = [];
-let category = {};
 
 app.use(bodyParser.json());
 
@@ -30,18 +26,38 @@ app.use(cors({
 
 //Main route for getting categories
 app.get('/jul', function (req, res) {
- 
-    rp(MAIN_URL)
-    .then(function(html){
-      categoriesArr = [];
-      let categories = parseCategoriesFromHtml(html);
 
-      res.status(200).json({ message: categoriesArr});
-    })
-    .catch(function(err){
-      console.log(err);
-    });
-});
+ (async () => {
+    
+     const browser = await puppeteer.launch()
+     const page = await browser.newPage()
+     await page.goto(MAIN_URL)
+
+     const categories = await page.evaluate(() => {
+        let cats = [...document.querySelectorAll(".product-category.product")];
+        let categoriesArr = [];
+        let cat = {};
+        for(let i = 0; i < cats.length; i++) {
+          let anchor = cats[i].children[0];
+            cat.link = anchor.attributes.href.textContent;
+            
+            cat.name = anchor.children[1].textContent.trim();
+
+            let categoryWordIndex = cat.link.indexOf('category');
+            let categoryName = cat.link.substring(categoryWordIndex + 9, cat.link.length - 1);
+            cat.image = categoryName;
+            categoriesArr.push(cat);
+            cat = {};
+          }
+
+           return categoriesArr;
+        })
+
+     res.status(200).json({ message: categories});
+  })();
+  
+})
+  
 
 //Routes for categories
 app.get('/category/baby', function (req, res) {
