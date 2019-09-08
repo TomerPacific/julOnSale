@@ -49,7 +49,7 @@ app.get('/jul', function (req, res) {
             cat.name = anchor.children[1].textContent.trim();
 
             let categoryWordIndex = cat.link.indexOf('category');
-            let categoryName = cat.link.substring(categoryWordIndex + 9, cat.link.length - 1);
+            let categoryName = cat.link.substring(categoryWordIndex + CATEGORY_WORD_LENGTH, cat.link.length - 1);
             cat.image = categoryName;
             categoriesArr.push(cat);
             cat = {};
