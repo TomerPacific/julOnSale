@@ -2,7 +2,6 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var cors = require('cors');
 const puppeteer = require('puppeteer');
-const CATEGORY_WORD_LENGTH = 9;
 var port = process.env.PORT || 3000;
 var app = express();
 const MAIN_URL = "https://ironsrc.jul.co.il/";
@@ -42,6 +41,8 @@ app.get('/jul', function (req, res) {
         let cats = [...document.querySelectorAll(".product-category.product")];
         let categoriesArr = [];
         let cat = {};
+        const CATEGORY_WORD_LENGTH = 9;
+        
         for(let i = 0; i < cats.length; i++) {
             let anchor = cats[i].children[0];
             cat.link = anchor.attributes.href.textContent;
