@@ -42,7 +42,7 @@ app.get('/jul', function (req, res) {
         let categoriesArr = [];
         let cat = {};
         const CATEGORY_WORD_LENGTH = 9;
-        
+
         for(let i = 0; i < cats.length; i++) {
             let anchor = cats[i].children[0];
             cat.link = anchor.attributes.href.textContent;
@@ -67,14 +67,7 @@ app.get('/jul', function (req, res) {
 
 //Routes for categories
 app.get('/category/baby', function (req, res) {
-    rp(MAIN_URL + '/product-category/baby/')
-    .then(function(html){
-      let products = getProductsOnSale(html);
-      res.status(200).json({ message: products});
-    })
-    .catch(function(err){
-      console.log(err);
-    });
+   getProductsOnSale(res);
 });
 
 
@@ -82,33 +75,40 @@ app.listen(port, function () {
  console.log('Jul app listening on port ' + port);
 });
 
-function getProductsOnSale(html) {
-  let products = cheerio('.product.type-product', html);
-  let productsOnSale = [];
-  let productOnSale = {};
-
-  for (let index = 0; index < products.length; index++) {
-    let product = products[index];
-    let productLink = product.children[1];
-    let onSaleSpan = productLink.children[8];
-
-    if (onSaleSpan && onSaleSpan.attribs.class === 'onsale') {
-      productOnSale.link = productLink.attribs.href;
-      let children = productLink.children;
-      let image = children[0];
-      productOnSale.image = image.attribs.src;
-
-      let priceParent = children[2];
-      let salePrice = priceParent.children[2];
-      let innerChild = salePrice.children[0].children[1].data;
-      productOnSale.price = innerChild;
+function getProductsOnSale(res) {
+  (async (res) => {
     
-      productsOnSale.push(productOnSale);
-      productOnSale = {};
-    }
-  }
+     const browser = await puppeteer.launch({devtools: true, headless: false})
+     const page = await browser.newPage()
+     await page.goto('https://ironsrc.jul.co.il/product-category/baby/')
 
-  return productsOnSale;
+     const productsOnSale = await page.evaluate(() => {
+        let products = [...document.querySelectorAll(".product.type-product")];
+        let productsArr = [];
+        let productForSale = {};
+        for(let i = 0; i < products.length; i++) {
+          let product = products[i];
+ 
+          let onSale = product.children[0].children[4];
+          if (!onSale) {
+            continue;
+          }
+
+          productForSale.image = product.children[0].children[0].src;
+          productForSale.link = product.children[0].href;
+          productForSale.price = product.children[0].children[1].children[1].textContent.trim();
+          productForSale.name = product.children[0].children[2].textContent.trim();
+        
+          productsArr.push(productForSale);
+          productForSale = {};
+            
+        }
+
+           return productsArr;
+        })
+
+     res.status(200).json({ message: productsOnSale});
+  })();
 }
 
 
