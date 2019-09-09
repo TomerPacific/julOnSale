@@ -50,7 +50,7 @@ function loadData(items) {
 		priceHeader.innerHTML = item.price;
 
 		image.setAttribute('class', 'item');
-		anchor.innerHTML = '<img src=' + item.src + ' class="item" alt=' + item.name + ' title=' + item.name + '>';
+		anchor.innerHTML = '<img src=' + image.src + ' class="item" alt=' + item.name + ' title=' + item.name + '>';
 
 		div.appendChild(nameHeader);
 		div.appendChild(anchor);
