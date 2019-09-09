@@ -60,6 +60,7 @@ app.get('/jul', function (req, res) {
         })
 
      res.status(200).json({ message: categories});
+     browser.close();
   })();
   
 })
@@ -67,18 +68,14 @@ app.get('/jul', function (req, res) {
 
 //Routes for categories
 app.get('/category/baby', function (req, res) {
-   getProductsOnSale(res);
-});
 
-
-app.listen(port, function () {
- console.log('Jul app listening on port ' + port);
-});
-
-function getProductsOnSale(res) {
-  (async (res) => {
+   (async () => {
     
-     const browser = await puppeteer.launch({devtools: true, headless: false})
+     const browser = await puppeteer.launch({'args' : [
+          '--no-sandbox',
+          '--disable-setuid-sandbox'
+        ]
+      })
      const page = await browser.newPage()
      await page.goto('https://ironsrc.jul.co.il/product-category/baby/')
 
@@ -108,8 +105,15 @@ function getProductsOnSale(res) {
         })
 
      res.status(200).json({ message: productsOnSale});
+     browser.close();
   })();
-}
+
+});
+
+
+app.listen(port, function () {
+ console.log('Jul app listening on port ' + port);
+});
 
 
 function parseCategoriesFromHtml(html) {
