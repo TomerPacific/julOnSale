@@ -34,8 +34,29 @@ xmlHttp.onerror = function() {
 
 xmlHttp.send();
 
-function loadData(categories) {
+function loadData(items) {
+	for (let index = 0; index < items.length; index++)
+	 {
+		let item = items[index];
+		let div = document.createElement('div');
+		let nameHeader = document.createElement('h3');
+		let priceHeader = document.createElement('h2');
+		let anchor = document.createElement('a');
+		let image = document.createElement('img');
 
+		nameHeader.innerHTML = item.name;
+		image.src = item.image;
+		anchor.href = item.link;
+		priceHeader.innerHTML = item.price;
+
+		image.setAttribute('class', 'item');
+		anchor.innerHTML = '<img src=' + item.src + ' class="item" alt=' + item.name + ' title=' + item.name + '>';
+
+		div.appendChild(nameHeader);
+		div.appendChild(anchor);
+		div.appendChild(priceHeader);
+		mainDiv.appendChild(div);
+	}
 }
 
 function parseJson(json) {
