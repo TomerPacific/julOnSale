@@ -79,6 +79,28 @@ app.get('/category/baby', function (req, res) {
      const page = await browser.newPage()
      await page.goto('https://ironsrc.jul.co.il/product-category/baby/')
 
+     await page.evaluate(() => {
+
+        function loadMoreProducts() {
+            let moreProductsButton = document.getElementsByClassName("fwp-load-more");
+            let noMoreItemsHeader = document.getElementsByClassName('woocommerce-info');
+ 
+            if (noMoreItemsHeader.length !== 0) {
+                return;
+            }
+            moreProductsButton[0].click();
+            setTimeout(function() {
+                moreProductsButton = document.getElementsByClassName("fwp-load-more");
+                moreProductsButton[0].click();
+                loadMoreProducts();
+            }, 3000); 
+        }
+
+       loadMoreProducts();
+     })
+
+     await page.waitFor(20000);
+
      const productsOnSale = await page.evaluate(() => {
         let products = [...document.querySelectorAll(".product.type-product")];
         let productsArr = [];
@@ -87,8 +109,8 @@ app.get('/category/baby', function (req, res) {
           let product = products[i];
  
           let onSale = product.children[0].children[4];
-          if (!onSale) {
-            continue;
+          if (!onSale || onSale.className !== 'onsale') {
+                continue;
           }
 
           productForSale.image = product.children[0].children[0].src;
