@@ -86,7 +86,7 @@ $(function() {
 
 	// Change page title on blur
 	$(window).blur(function() {
-	  $("title").text(" <3 U");
+	  $("title").text(" ❤️ U");
 	});
 
 	// Change page title back on focus
