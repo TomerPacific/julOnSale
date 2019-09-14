@@ -69,6 +69,7 @@ app.get('/jul', function (req, res) {
   
 
 //Routes for categories
+//BABY CATEGORY
 app.get('/category/baby', function (req, res) {
     lastDateScraped = lastDateScraped ? lastDateScraped : new Date();
    (async () => {
@@ -135,10 +136,12 @@ app.get('/category/baby', function (req, res) {
 });
 
 
+//ELECTRONIC CATEGORY
+
 app.get('/category/electronic', function (req, res) {
   lastDateScraped = lastDateScraped ? lastDateScraped : new Date();
   let electronicProducts = null;
-  if (!enoughDaysHavePassed()) {
+  if (!enoughDaysHavePassed(lastDateScraped)) {
     return electronicProducts;
   }
 
@@ -205,6 +208,77 @@ app.get('/category/electronic', function (req, res) {
 
 });
 
+
+//CATEGORY FRESH MARKET
+app.get('/category/fresh-market', function (req, res) {
+  lastDateScraped = lastDateScraped ? lastDateScraped : new Date();
+  let marketProducts = null;
+  if (!enoughDaysHavePassed(lastDateScraped)) {
+    return marketProducts;
+  }
+
+   (async () => {
+    
+     const browser = await puppeteer.launch({'args' : [
+          '--no-sandbox',
+          '--disable-setuid-sandbox'
+        ]
+      })
+     const page = await browser.newPage()
+     await page.goto('https://ironsrc.jul.co.il/product-category/fresh-market/')
+
+     await page.evaluate(() => {
+
+        function loadMoreProducts() {
+            let moreProductsButton = document.getElementsByClassName("fwp-load-more");
+            let noMoreItemsHeader = document.getElementsByClassName('woocommerce-info');
+ 
+            if (noMoreItemsHeader.length !== 0) {
+                return;
+            }
+            moreProductsButton[0].click();
+            setTimeout(function() {
+                moreProductsButton = document.getElementsByClassName("fwp-load-more");
+                moreProductsButton[0].click();
+                loadMoreProducts();
+            }, 3000); 
+        }
+
+       loadMoreProducts();
+     })
+
+     await page.waitFor(20000);
+
+     const productsOnSale = await page.evaluate(() => {
+        let products = [...document.querySelectorAll(".product.type-product")];
+        let productsArr = [];
+        let productForSale = {};
+        for(let i = 0; i < products.length; i++) {
+          let product = products[i];
+ 
+          let onSale = product.children[0].children[4];
+          if (!onSale || onSale.className !== 'onsale') {
+                continue;
+          }
+
+          productForSale.image = product.children[0].children[0].src;
+          productForSale.link = product.children[0].href;
+          productForSale.price = product.children[0].children[1].children[1].textContent.trim();
+          productForSale.name = product.children[0].children[2].textContent.trim();
+        
+          productsArr.push(productForSale);
+          productForSale = {};
+            
+        }
+
+           return productsArr;
+        })
+     marketProducts = productsOnSale;
+     res.status(200).json({ message: productsOnSale});
+     browser.close();
+  })();
+
+});
 
 
 
