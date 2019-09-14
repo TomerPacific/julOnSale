@@ -6,6 +6,7 @@ var port = process.env.PORT || 3000;
 var app = express();
 const MAIN_URL = "https://ironsrc.jul.co.il/";
 const shoppingCategoriesClass = ".product-category.product";
+const daysPassedToScrapeAgain = 1;
 var lastDateScraped;
 
 
