@@ -1,5 +1,8 @@
 var express = require('express');
 var bodyParser = require('body-parser');
+const cheerio = require('cheerio');
+const axios = require('axios');
+const ar = require('async-request');
 var cors = require('cors');
 const puppeteer = require('puppeteer');
 var port = process.env.PORT || 3000;
@@ -212,75 +215,72 @@ app.get('/category/electronic', function (req, res) {
 
 //CATEGORY FRESH MARKET
 app.get('/category/fresh-market', function (req, res) {
-  lastDateScraped = lastDateScraped ? lastDateScraped : new Date();
-  let marketProducts = null;
-  if (!enoughDaysHavePassed(lastDateScraped)) {
-    return marketProducts;
-  }
-
-   (async () => {
-    
-     const browser = await puppeteer.launch({'args' : [
-          '--no-sandbox',
-          '--disable-setuid-sandbox'
-        ]
-      })
-     const page = await browser.newPage()
-     await page.goto('https://ironsrc.jul.co.il/product-category/fresh-market/')
-
-     await page.evaluate(() => {
-
-        function loadMoreProducts() {
-            let moreProductsButton = document.getElementsByClassName("fwp-load-more");
-            let noMoreItemsHeader = document.getElementsByClassName('woocommerce-info');
- 
-            if (noMoreItemsHeader.length !== 0) {
-                return;
-            }
-            moreProductsButton[0].click();
-            setTimeout(function() {
-                moreProductsButton = document.getElementsByClassName("fwp-load-more");
-                moreProductsButton[0].click();
-                loadMoreProducts();
-            }, 3000); 
-        }
-
-       loadMoreProducts();
-     })
-
-     await page.waitFor(20000);
-
-     const productsOnSale = await page.evaluate(() => {
-        let products = [...document.querySelectorAll(".product.type-product")];
-        let productsArr = [];
-        let productForSale = {};
-        for(let i = 0; i < products.length; i++) {
-          let product = products[i];
- 
-          let onSale = product.children[0].children[4];
-          if (!onSale || onSale.className !== 'onsale') {
-                continue;
-          }
-
-          productForSale.image = product.children[0].children[0].src;
-          productForSale.link = product.children[0].href;
-          productForSale.price = product.children[0].children[1].children[1].textContent.trim();
-          productForSale.name = product.children[0].children[2].textContent.trim();
-        
-          productsArr.push(productForSale);
-          productForSale = {};
-            
-        }
-
-           return productsArr;
-        })
-     marketProducts = productsOnSale;
-     res.status(200).json({ message: productsOnSale});
-     browser.close();
-  })();
-
+  let url = `https://ironsrc.jul.co.il/product-category` + req.url + `/?fwp_load_more=1`;
+  fetchAmountOfPages(url,req.url, res);
 });
 
+
+function parseProducts(response, res) {
+   let productsOnSale = [];
+    const $ = cheerio.load(response.data);
+    let products = $('li.product.type-product');
+    
+    for(let i = 0; i < products.length; i++) {
+      let product = products[i];
+
+      let anchor = product.children[1];
+      let onSaleSpan = anchor.children[8];
+      if(onSaleSpan && onSaleSpan.attribs.class === 'onsale') {
+      
+        let image = anchor.children[0].attribs.src;
+        let productName = anchor.children[4].children[0].data.trim();
+        let price = anchor.children[2].children[2].children[0].children[1].data.trim();
+
+        let productOnSale = {};
+        productOnSale.name = productName;
+        productOnSale.image = image;
+        productOnSale.price = price;
+        productOnSale.link = anchor.attribs.href;
+
+        productsOnSale.push(productOnSale);
+        productOnSale = {};
+      }
+    }
+
+     res.status(200).json({ message: productsOnSale});
+}
+
+
+function getProducts(url, category, maxAmountOfPages, res) {
+  url = `https://ironsrc.jul.co.il/product-category` + category + `/?fwp_load_more=${maxAmountOfPages}`;
+  
+  axios.get(url).then(response => {
+    console.log(response);
+    parseProducts(response, res);
+  })
+  .catch(error => {
+    console.log(error);
+  })
+}
+
+async function fetchAmountOfPages(url,category,res) {
+
+  const resp = await ar(url, {
+        method: 'POST',
+        data: {
+            action: 'facetwp_refresh',
+            'data[template]': 'wp'
+        }
+    });
+
+    const data = JSON.parse(resp.body);
+
+    let settings = data.settings;
+    let max = settings.pager.total_pages;
+    max--;
+
+    getProducts(url, category, max, res);
+}
 
 
 
