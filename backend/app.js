@@ -95,6 +95,13 @@ app.get('/category/fresh-market', function (req, res) {
 });
 
 
+//CATEGORY HEALTH
+app.get('/category/health', function (req, res) {
+  let url = `https://ironsrc.jul.co.il/product-category` + req.url + `/?fwp_load_more=1`;
+  fetchAmountOfPages(url,req.url, res);
+});
+
+
 function parseProducts(response, res) {
    let productsOnSale = [];
     const $ = cheerio.load(response.data);
