@@ -72,49 +72,8 @@ app.get('/jul', function (req, res) {
 })
   
 
-//Routes for categories
-//BABY CATEGORY
-app.get('/category/baby', function (req, res) {
-  let url = `https://ironsrc.jul.co.il/product-category` + req.url + `/?fwp_load_more=1`;
-  fetchAmountOfPages(url,req.url, res);
-});
-
-
-//ELECTRONIC CATEGORY
-
-app.get('/category/electronic', function (req, res) {
-  let url = `https://ironsrc.jul.co.il/product-category` + req.url + `/?fwp_load_more=1`;
-  fetchAmountOfPages(url,req.url, res);
-});
-
-
-//CATEGORY FRESH MARKET
-app.get('/category/fresh-market', function (req, res) {
-  let url = `https://ironsrc.jul.co.il/product-category` + req.url + `/?fwp_load_more=1`;
-  fetchAmountOfPages(url,req.url, res);
-});
-
-
-//CATEGORY HEALTH
-app.get('/category/health', function (req, res) {
-  let url = `https://ironsrc.jul.co.il/product-category` + req.url + `/?fwp_load_more=1`;
-  fetchAmountOfPages(url,req.url, res);
-});
-
-//CATEGORY HOUSEHOLD
-app.get('/category/household', function (req, res) {
-  let url = `https://ironsrc.jul.co.il/product-category` + req.url + `/?fwp_load_more=1`;
-  fetchAmountOfPages(url,req.url, res);
-});
-
-//CATEGORY KITCHENWARE
-app.get('/category/kitchenware', function (req, res) {
-  let url = `https://ironsrc.jul.co.il/product-category` + req.url + `/?fwp_load_more=1`;
-  fetchAmountOfPages(url,req.url, res);
-});
-
-//CATEGORY LIQUOR-TOBACCO
-app.get('/category/liquor-tobacco', function (req, res) {
+//Route for categories
+app.get('/category/*', function (req, res) {
   let url = `https://ironsrc.jul.co.il/product-category` + req.url + `/?fwp_load_more=1`;
   fetchAmountOfPages(url,req.url, res);
 });
