@@ -4,13 +4,17 @@ const cheerio = require('cheerio');
 const axios = require('axios');
 const ar = require('async-request');
 var cors = require('cors');
-const puppeteer = require('puppeteer');
 var port = process.env.PORT || 3000;
 var app = express();
+
+
 const MAIN_URL = "https://ironsrc.jul.co.il/";
+const CATEGORY_WORD_LENGTH = 8;
 const shoppingCategoriesClass = ".product-category.product";
 const daysPassedToScrapeAgain = 1;
-var lastDateScraped;
+
+let categoriesArr = [];
+let lastDateScraped;
 
 
 app.use(bodyParser.json());
@@ -31,43 +35,20 @@ app.use(cors({
 
 //Main route for getting categories
 app.get('/jul', function (req, res) {
+  if (categoriesArr.length !== 0 && !enoughDaysHavePassed()) {
+    res.status(200).json({ message: categoriesArr});
+  }
 
- (async () => {
-    
-     const browser = await puppeteer.launch({
-        'args' : [
-          '--no-sandbox',
-          '--disable-setuid-sandbox'
-        ]
-      })
-     const page = await browser.newPage()
-     await page.goto(MAIN_URL)
-
-     const categories = await page.evaluate(() => {
-        let cats = [...document.querySelectorAll(".product-category.product")];
-        let categoriesArr = [];
-        let cat = {};
-        const CATEGORY_WORD_LENGTH = 9;
-
-        for(let i = 0; i < cats.length; i++) {
-            let anchor = cats[i].children[0];
-            cat.link = anchor.attributes.href.textContent;
-            
-            cat.name = anchor.children[1].textContent.trim();
-
-            let categoryWordIndex = cat.link.indexOf('category');
-            let categoryName = cat.link.substring(categoryWordIndex + CATEGORY_WORD_LENGTH, cat.link.length - 1);
-            cat.image = categoryName;
-            categoriesArr.push(cat);
-            cat = {};
-          }
-
-           return categoriesArr;
-        })
-
-     res.status(200).json({ message: categories});
-     browser.close();
-  })();
+  axios.get(MAIN_URL).then(response => {
+    lastDateScraped = new Date();
+    categoriesArr = [];
+    parseCategoriesFromHtml(response.data);
+    res.status(200).json({ message: categoriesArr});
+  })
+  .catch(error => {
+    console.log(error);
+  })
+  
   
 })
   
@@ -161,23 +142,22 @@ function enoughDaysHavePassed(lastDateScraped) {
 
 function parseCategoriesFromHtml(html) {
   let categories = cheerio(shoppingCategoriesClass, html);
-      for(let i = 0; i < categories.length; i++) {
-           let children = categories[i].children;
-            for(let j = 0; j < children.length; j++) {
-              if (children[j].name === 'a') {
-                category.link = children[j].attribs.href;
-                let innerChildren = children[j].children;
-                let header = innerChildren[2];
-                let categoryName = header.children[0].data.trim();
-                category.name = categoryName;
-                category.image = assignCategoryImage(category.link);
-                categoriesArr.push(category);
-                category = {};
-              }
-          
-            }
-      }
-   return categories;
+  let category ={};
+  for(let i = 0; i < categories.length; i++) {
+       let children = categories[i].children;
+        for(let j = 0; j < children.length; j++) {
+          if (children[j].name === 'a') {
+            category.link = children[j].attribs.href;
+            let innerChildren = children[j].children;
+            let header = innerChildren[2];
+            let categoryName = header.children[0].data.trim();
+            category.name = categoryName;
+            category.image = assignCategoryImage(category.link);
+            categoriesArr.push(category);
+            category = {};
+          }
+        }
+  }
 }
 
 
