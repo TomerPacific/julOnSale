@@ -52,3 +52,7 @@
   width: 200px;
   height: 200px;
 }
+
+.no-items {
+  text-align: center;
+}
