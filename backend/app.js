@@ -113,6 +113,13 @@ app.get('/category/kitchenware', function (req, res) {
   fetchAmountOfPages(url,req.url, res);
 });
 
+//CATEGORY LIQUOR-TOBACCO
+app.get('/category/liquor-tobacco', function (req, res) {
+  let url = `https://ironsrc.jul.co.il/product-category` + req.url + `/?fwp_load_more=1`;
+  fetchAmountOfPages(url,req.url, res);
+});
+
+
 function parseProducts(response, res) {
    let productsOnSale = [];
     const $ = cheerio.load(response.data);
