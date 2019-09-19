@@ -11,6 +11,8 @@ var app = express();
 const MAIN_URL = "https://ironsrc.jul.co.il/";
 const CATEGORY_WORD_LENGTH = 8;
 const shoppingCategoriesClass = ".product-category.product";
+const productClassSelector = 'li.product.type-product';
+const ON_SALE_CLASS = 'onsale';
 const daysPassedToScrapeAgain = 1;
 
 let categoriesArr = [];
@@ -63,14 +65,14 @@ app.get('/category/*', function (req, res) {
 function parseProducts(response, res) {
    let productsOnSale = [];
     const $ = cheerio.load(response.data);
-    let products = $('li.product.type-product');
+    let products = $(productClassSelector);
     
     for(let i = 0; i < products.length; i++) {
       let product = products[i];
 
       let anchor = product.children[1];
       let onSaleSpan = anchor.children[8];
-      if(onSaleSpan && onSaleSpan.attribs.class === 'onsale') {
+      if(onSaleSpan && onSaleSpan.attribs.class === ON_SALE_CLASS) {
       
         let image = anchor.children[0].attribs.src;
         let productName = anchor.children[4].children[0].data.trim();
@@ -79,7 +81,7 @@ function parseProducts(response, res) {
         let productOnSale = {};
         productOnSale.name = productName;
         productOnSale.image = image;
-        productOnSale.price = price;
+        productOnSale.price = &#8362; + "" + price;
         productOnSale.link = anchor.attribs.href;
 
         productsOnSale.push(productOnSale);
