@@ -52,8 +52,7 @@ app.get('/jul', function (req, res) {
   })
   
   
-})
-  
+});
 
 //Route for categories
 app.get('/category/*', function (req, res) {
@@ -81,7 +80,7 @@ function parseProducts(response, res) {
         let productOnSale = {};
         productOnSale.name = productName;
         productOnSale.image = image;
-        productOnSale.price = &#8362; + "" + price;
+        productOnSale.price = '₪' + price;
         productOnSale.link = anchor.attribs.href;
 
         productsOnSale.push(productOnSale);
