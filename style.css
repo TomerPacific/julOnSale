@@ -58,6 +58,6 @@
   text-align: center;
 }
 
-.category:hoverm .item:hover {
+.category:hover, .item:hover {
   background-color: #25DDF4;
 }
