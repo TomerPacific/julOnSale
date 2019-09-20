@@ -33,6 +33,15 @@ xmlHttp.onerror = function() {
 xmlHttp.send();
 
 function loadData(items) {
+
+	if (items.length === 0) {
+		let header = document.createElement('h3');
+		header.innerHTML = "Sorry, no items are on sale 😞";
+		header.setAttribute('class', 'no-items');
+		mainDiv.appendChild(header);
+		return;
+	}
+	
 	for (let index = 0; index < items.length; index++)
 	 {
 		let item = items[index];
