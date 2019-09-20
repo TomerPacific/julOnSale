@@ -57,3 +57,7 @@
 .no-items {
   text-align: center;
 }
+
+.category:hoverm .item:hover {
+  background-color: #25DDF4;
+}
