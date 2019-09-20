@@ -67,4 +67,4 @@ function parseJson(json) {
 }
 
 
-setCurrentDate();
+setCurrentDate(dateHeader);

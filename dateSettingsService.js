@@ -1,7 +1,7 @@
 const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
 
-function setCurrentDate() {
+function setCurrentDate(dateHeader) {
 	var currentDate = new Date();
 	dateHeader.innerHTML = "For the day of " + months[currentDate.getMonth()] + ' ' + currentDate.getDate() + ', ' + currentDate.getFullYear();
 	dateHeader.style.display = "block";
