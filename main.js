@@ -2,8 +2,6 @@ let mainDiv = document.getElementById("main");
 let loader = document.getElementsByClassName("loader");
 let dateHeader = document.getElementById('date');
 
-const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-
 const url = "https://jul-on-sale.herokuapp.com/jul";
 
 var xmlHttp = new XMLHttpRequest();
@@ -68,27 +66,5 @@ function parseJson(json) {
 	return data;
 }
 
-function setCurrentDate() {
-	var currentDate = new Date();
-	dateHeader.innerHTML = "For the day of " + months[currentDate.getMonth()] + ' ' + currentDate.getDate() + ', ' + currentDate.getFullYear();
-	dateHeader.style.display = "block";
-}
 
 setCurrentDate();
-
-/* Jquery tab title changer */
-
-$(function() {
-	// Get page title
-  	var pageTitle = $("title").text();
-
-	// Change page title on blur
-	$(window).blur(function() {
-	  $("title").text(" ❤️ U");
-	});
-
-	// Change page title back on focus
-	$(window).focus(function() {
-	  $("title").text(pageTitle);
-	});
-});
