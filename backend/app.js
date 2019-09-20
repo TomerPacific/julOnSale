@@ -3,14 +3,12 @@ var bodyParser = require('body-parser');
 const cheerio = require('cheerio');
 const axios = require('axios');
 const ar = require('async-request');
-var cors = require('cors');
+const cors = require('cors');
+const categoryService = require('./categoryService');
 var port = process.env.PORT || 3000;
 var app = express();
 
-
 const MAIN_URL = "https://ironsrc.jul.co.il/";
-const CATEGORY_WORD_LENGTH = 8;
-const shoppingCategoriesClass = ".product-category.product";
 const productClassSelector = 'li.product.type-product';
 const ON_SALE_CLASS = 'onsale';
 const daysPassedToScrapeAgain = 1;
@@ -43,8 +41,7 @@ app.get('/jul', function (req, res) {
 
   axios.get(MAIN_URL).then(response => {
     lastDateScraped = new Date();
-    categoriesArr = [];
-    parseCategoriesFromHtml(response.data);
+    categoriesArr = categoryService.parseCategoriesFromHtml(response.data);
     res.status(200).json({ message: categoriesArr});
   })
   .catch(error => {
@@ -141,29 +138,3 @@ function enoughDaysHavePassed(lastDateScraped) {
   return dayDifference > daysPassedToScrapeAgain;
 }
 
-function parseCategoriesFromHtml(html) {
-  let categories = cheerio(shoppingCategoriesClass, html);
-  let category ={};
-  for(let i = 0; i < categories.length; i++) {
-       let children = categories[i].children;
-        for(let j = 0; j < children.length; j++) {
-          if (children[j].name === 'a') {
-            category.link = children[j].attribs.href;
-            let innerChildren = children[j].children;
-            let header = innerChildren[2];
-            let categoryName = header.children[0].data.trim();
-            category.name = categoryName;
-            category.image = assignCategoryImage(category.link);
-            categoriesArr.push(category);
-            category = {};
-          }
-        }
-  }
-}
-
-
-function assignCategoryImage(link) {
-  let catroryWordIndex = link.indexOf('category');
-  let categoryName = link.substring(catroryWordIndex + CATEGORY_WORD_LENGTH, link.length - 1);
-  return categoryName;
-}
