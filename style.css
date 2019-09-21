@@ -58,6 +58,6 @@
   text-align: center;
 }
 
-.category:hover, .item:hover {
-  background-color: #25DDF4;
+.container {
+  border: 2px solid #25DDF4;
 }

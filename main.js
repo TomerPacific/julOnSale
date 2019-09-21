@@ -50,6 +50,7 @@ function loadData(categories) {
 
 		div.appendChild(header);
 		div.appendChild(anchor);
+		div.setAttribute('class', 'container');
 		mainDiv.appendChild(div);
 	}
 
