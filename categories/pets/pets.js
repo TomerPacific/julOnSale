@@ -63,6 +63,7 @@ function loadData(items) {
 		div.appendChild(nameHeader);
 		div.appendChild(anchor);
 		div.appendChild(priceHeader);
+		div.setAttribute('class', 'container');
 		mainDiv.appendChild(div);
 	}
 }
