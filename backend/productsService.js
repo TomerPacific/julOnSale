@@ -12,7 +12,6 @@ let producstByCategory = {};
 module.exports = {
 
 	parseProducts: function(response, res, category) {
-
 		if (productsAlreadyParsed(category)) {
 			res.status(200).json({ message: producstByCategory[category].products});
 			return;
@@ -61,6 +60,7 @@ module.exports = {
 	  })
 	  .catch(error => {
 	    console.log(error);
+	    res.status(500).json({ message: 'A server side error has occurred'});
 	  })
 	},
 
@@ -95,10 +95,8 @@ function productsAlreadyParsed(category) {
 		}
 
 		let timeDifference = new Date().getTime() - lastDateScraped.getTime();
-  		let dayDifference = Math.floor(timeDifference / 1000*60*60*24);
-
+  		let dayDifference = Math.floor(timeDifference / (1000*60*60*24));
   		return dayDifference < daysPassedToScrapeAgain;
-
 	}
 
 	return false;
