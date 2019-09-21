@@ -5,7 +5,6 @@ const cors = require('cors');
 const categoryService = require('./categoryService');
 const productsService = require('./productsService');
 
-
 var port = process.env.PORT || 3000;
 var app = express();
 const MAIN_URL = "https://ironsrc.jul.co.il/";
@@ -13,7 +12,6 @@ const daysPassedToScrapeAgain = 1;
 
 let categoriesArr = [];
 let lastDateScraped;
-
 
 app.use(bodyParser.json());
 
@@ -52,7 +50,7 @@ app.get('/jul', function (req, res) {
 //Route for categories
 app.get('/category/*', function (req, res) {
   let url = `https://ironsrc.jul.co.il/product-category` + req.url + `/?fwp_load_more=1`;
-  productsService.fetchAmountOfPages(url,req.url, res);
+  productsService.fetchAmountOfPages(url, req.url, res);
 });
 
 
