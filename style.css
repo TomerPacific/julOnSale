@@ -59,5 +59,6 @@
 }
 
 .container:hover {
-  border: 2px solid #25DDF4;
+  outline-style: solid;
+  outline-color: #25DDF4;
 }
