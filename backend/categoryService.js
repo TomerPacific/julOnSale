@@ -3,7 +3,7 @@
 const cheerio = require('cheerio');
 const shoppingCategoriesClass = ".product-category.product";
 const CATEGORY_WORD_LENGTH = 8;
-const CATEGORIES = ['baby', 'electronics', 'fresh-market', 'gifts', 'health', 'household', 'kitchenware', 'liquor-tobacco', 'personal-care', 'pets', 'sales', 'sports', 'supermarket'];
+const CATEGORIES = ['baby', 'electronic', 'fresh-market', 'gifts', 'health', 'household', 'kitchenware', 'liquor-tobacco', 'personal-care', 'pets', 'sales', 'sports', 'supermarket'];
 
 module.exports = {
  	parseCategoriesFromHtml: function(html) {
