@@ -16,6 +16,12 @@ xmlHttp.onload = function() {
 
 	let data = parseJson(responseText);
 	if (!data || !data.message) {
+		showServerError("JSON data is missing");
+		return;
+	}
+
+	if (data.message.length === 0) {
+		showServerError("No categories received");
 		return;
 	}
 
@@ -28,9 +34,6 @@ xmlHttp.onload = function() {
 
 xmlHttp.onerror = function(error) {
 	console.error(error);
-	loader[0].style.display = "none";
-	let serverErrorDiv = document.getElementById("server-error");
-	serverErrorDiv.innerHTML = "אוי לא! כנראה שישנה בעיה עם השרת. אנא נסו שנית מאוחר יותר."
 };
 
 xmlHttp.send();
@@ -68,6 +71,12 @@ function parseJson(json) {
 	}
 
 	return data;
+}
+
+function showServerError(error) {
+	loader[0].style.display = "none";
+	let serverErrorDiv = document.getElementById("server-error");
+	serverErrorDiv.innerHTML = "אוי לא! כנראה שישנה בעיה עם השרת. אנא נסו שנית מאוחר יותר."
 }
 
 
