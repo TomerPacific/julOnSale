@@ -34,6 +34,7 @@ xmlHttp.onload = function() {
 
 xmlHttp.onerror = function(error) {
 	console.error(error);
+	showServerError(error);
 };
 
 xmlHttp.send();
