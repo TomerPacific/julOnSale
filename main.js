@@ -26,8 +26,11 @@ xmlHttp.onload = function() {
 	loader[0].style.display = "none";
 };
 
-xmlHttp.onerror = function() {
-	console.log("Error");
+xmlHttp.onerror = function(error) {
+	console.error(error);
+	loader[0].style.display = "none";
+	let serverErrorDiv = document.getElementById("server-error");
+	serverErrorDiv.innerHTML = "אוי לא! כנראה שישנה בעיה עם השרת. אנא נסו שנית מאוחר יותר."
 };
 
 xmlHttp.send();

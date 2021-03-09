@@ -62,3 +62,8 @@
   outline-style: solid;
   outline-color: #25DDF4;
 }
+
+#server-error {
+  display: hidden;
+}
+
