@@ -14,7 +14,7 @@
   "author": "Tomer Ben Rachel",
   "license": "ISC",
   "dependencies": {
-    "async-request": "^1.2.0",
+    "async-request": "^1.0.0",
     "axios": "^0.21.2",
     "cheerio": "^1.0.0-rc.5",
     "cors": "^2.8.5",
