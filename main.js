@@ -1,43 +1,5 @@
 let mainDiv = document.getElementById("main");
-let loader = document.getElementsByClassName("loader");
 let dateHeader = document.getElementById('date');
-
-const url = "https://jul-on-sale.herokuapp.com/jul";
-
-var xmlHttp = new XMLHttpRequest();
-xmlHttp.open("GET", url, true);
-xmlHttp.setRequestHeader("Content-Type", "application/json");
-
-xmlHttp.onload = function() {
-	var responseText = xmlHttp.responseText;
-	if (!responseText) {
-		return;
-	}
-
-	let data = parseJson(responseText);
-	if (!data || !data.message) {
-		showServerError("JSON data is missing");
-		return;
-	}
-
-	if (data.message.length === 0) {
-		showServerError("No categories received");
-		return;
-	}
-
-	mainDiv.innerHTML = '';
-	
-	loadData(data.message);
-
-	loader[0].style.display = "none";
-};
-
-xmlHttp.onerror = function(error) {
-	console.error(error);
-	showServerError(error);
-};
-
-xmlHttp.send();
 
 function loadData(categories) {
 
@@ -75,7 +37,6 @@ function parseJson(json) {
 }
 
 function showServerError(error) {
-	loader[0].style.display = "none";
 	let serverErrorDiv = document.getElementById("server-error");
 	serverErrorDiv.innerHTML = "אוי לא! כנראה שישנה בעיה עם השרת. אנא נסו שנית מאוחר יותר."
 }
